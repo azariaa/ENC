@@ -10,8 +10,8 @@ import java.util.Properties;
  */
 public class EmailOperations
 {
-    String username = "amospam2@gmail.com";
-    String password = "Azaria12";
+    String username;
+    String password;
     String emailAddr;
 
     public EmailOperations(String username, String password, String emailAddr)
