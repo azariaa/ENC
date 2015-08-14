@@ -29,6 +29,11 @@ public class PiazzaApi
         answer, followup, question
     }
 
+    /**
+     * Works only if question wasn't already answered (Agent shouldn't edit already answered questions)
+     * @param cid
+     * @param answer
+     */
     public void answerQuestion(String cid, String answer)
     {
         performAction(PiazzaAction.answer, cid, "", "", answer, "");

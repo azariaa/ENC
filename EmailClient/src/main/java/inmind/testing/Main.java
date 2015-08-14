@@ -14,7 +14,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     Properties prop = new Properties();
-    prop.load(new FileReader("EmailClient/default.properties"));
+    prop.load(new FileReader("default.properties"));
     String username = prop.getProperty("username");
     String password = prop.getProperty("password");
 
@@ -36,9 +36,9 @@ public class Main {
 
     String question = "";
     PiazzaApi piazzaApi = new PiazzaApi(username, password);
-    piazzaApi.answerQuestion("icqi85vqvc375u", qa.getAnswer(question));
-    // piazzaApi.followup("icqi85vqvc375u","Automatic followup");
-    // piazzaApi.askQuestion("ic53erv8juk488", "Automatic question asked", "auto generated", "other");
+    piazzaApi.answerQuestion("idc2auqeia5wc", qa.getAnswer(question));
+     //piazzaApi.followup("icqi85vqvc375u","New Automatic followup");
+     //piazzaApi.askQuestion("ic53erv8juk488", "New Automatic question asked", "auto generated", "other");
   }
 
 }
