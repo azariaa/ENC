@@ -31,14 +31,14 @@ public class Main {
     };
 
     EmailOperations emailOperations = new EmailOperations(username, password, username);
-    emailOperations.printLastEmails(2);
+    //emailOperations.printLastEmails(2);
     // emailOperations.sendEmail("Testing Subject", "This is me,\n\n have a nice day!", "amos.azaria@gmail.com");
 
     String question = "";
     PiazzaApi piazzaApi = new PiazzaApi(username, password);
-    piazzaApi.answerQuestion("idc2auqeia5wc", qa.getAnswer(question));
+    //piazzaApi.answerQuestion("idc2auqeia5wc", qa.getAnswer(question));
      //piazzaApi.followup("icqi85vqvc375u","New Automatic followup");
-     //piazzaApi.askQuestion("ic53erv8juk488", "New Automatic question asked", "auto generated", "other");
+     piazzaApi.askQuestion("ie348yjty84c7", "New Automatic question asked", "auto generated", "other");
   }
 
 }
