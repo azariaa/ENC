@@ -20,11 +20,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import inmind.qa.QuestionAnsweringAgent;
+
 /**
  * @author zal (Salvador Medina)
  * @version 0.1
  */
-public class LuceneEngine {
+public class LuceneEngine implements QuestionAnsweringAgent{
   StandardAnalyzer  LE_InputAnalyzer; // Text analyzer for fact input and query
   IndexWriter       LE_IndexWriter;   // Index writer instance
   Directory         LE_IndexDir;      // Index location in local disk
@@ -51,11 +53,11 @@ public class LuceneEngine {
    * @param fact Piazza fact to be stored
    * @throws IOException Thrown when the index cannot be read/write
    */
-  public void addFact(String fact, String source) throws IOException {
+  public void addDocument(String inDoc, String source) throws IOException {
     Document doc = new Document(); //Document to be indexed
     
     //TODO: Need to think of more fields in index
-    doc.add(new TextField("fact", fact, Field.Store.YES));
+    doc.add(new TextField("content", inDoc, Field.Store.YES));
     doc.add(new TextField("source", source, Field.Store.YES));
     LE_IndexWriter.addDocument(doc);
   }
@@ -68,10 +70,10 @@ public class LuceneEngine {
    * @throws IOException Thrown when the index cannot be read/write
    * @throws ParseException Thrown when the query string is in an invalid encoding 
    */
-  public List<String> query(String queryStr, int nHits) throws IOException, ParseException {
+  public List<String> getAnswer(String queryStr, int nHits) throws IOException, ParseException {
     List<String> queryRes = new ArrayList<String>();
    
-    Query q = new QueryParser( "fact", LE_InputAnalyzer).parse(queryStr);
+    Query q = new QueryParser( "content", LE_InputAnalyzer).parse(queryStr);
     
     IndexReader reader = DirectoryReader.open(LE_IndexDir);
     IndexSearcher searcher = new IndexSearcher(reader);
