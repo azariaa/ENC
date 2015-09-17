@@ -1,12 +1,19 @@
-package inmind.email;
+package EmailClient.src.main.java.inmind.email;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFTextStripper;
+import org.omg.SendingContext.RunTime;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.*;
 import java.util.Properties;
+import java.util.Date;
 
 /**
  * Created by Amos Azaria on 15-Jul-15.
+ * Modified by Suruchi Shah on 13-Sept-15
  */
 public class EmailOperations
 {
@@ -60,6 +67,67 @@ public class EmailOperations
         }
     }
 
+    /**
+     * This method extracts the emails received after the last fetch date
+     * @param lastFetchDate The last time the emails were extracted
+     * @param fileName This is the path of the file where the output will be stored
+     * @author suruchi.shah
+     */
+    public void extractLastEmails(Date lastFetchDate, String fileName)    {
+        Properties props = new Properties();
+        props.setProperty("mail.store.protocol", "imaps");
+        BufferedWriter writer = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(fileName)), "utf-8"));
+            Session session = Session.getInstance(props, null);
+            Store store = session.getStore();
+            store.connect("imap.gmail.com", username, password);
+            Folder inbox = store.getFolder("INBOX");
+            inbox.open(Folder.READ_ONLY);
+            for(int counter = inbox.getMessageCount(); counter > 0; counter--)  {
+                Message msg = inbox.getMessage(counter);
+                if(msg.getSentDate().after(lastFetchDate))  {
+                    sb.append("<EMAIL>\n");
+                    sb.append("EMAILID:" + counter + "\n");
+                    Address[] in = msg.getFrom();
+                    sb.append("FROM:");
+                    for (Address address : in) {
+                        sb.append(address.toString() + ",");
+                    }
+                    sb.append("\n");
+                    in = msg.getAllRecipients();
+                    sb.append("RECIPIENT:");
+                    for(Address address: in)    {
+                        sb.append(address.toString()+",");
+                    }
+                    sb.append("\n");
+                    String bodyStr = "Error!";
+                    Object msgContent = msg.getContent();
+                    if (msgContent instanceof String)
+                        bodyStr = (String)msgContent;
+                    else if (msgContent instanceof Multipart)
+                    {
+                        BodyPart bp = ((Multipart)msgContent).getBodyPart(0);
+                        bodyStr = bp.getContent().toString();
+                    }
+                    sb.append("RECEIVEDATE:" + msg.getReceivedDate() + "\n");
+                    sb.append("SENTDATE:" + msg.getSentDate() + "\n");
+                    sb.append("SUBJECT:" + msg.getSubject() + "\n");
+                    sb.append("CONTENT:" + bodyStr + "\n");
+                    sb.append("</EMAIL>\n");
+                }
+                else    {
+                    break;
+                }
+            }
+            writer.write(sb.toString());
+            writer.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void sendEmail(String subject, String body, String recipient)
     {
         Properties props = new Properties();
@@ -91,5 +159,53 @@ public class EmailOperations
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void preprocessExtractedEmails(String inputFileName, String sourceFile, String pythonScriptsPath) {
+
+        String s = null;
+        try {
+            Process p = Runtime.getRuntime().exec(new String[]{"python", pythonScriptsPath + "/extractEmailContent.py", inputFileName, sourceFile});
+
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+            // read the output from the command
+            StringBuilder outputJsonString = new StringBuilder();
+            while ((s = stdInput.readLine()) != null) {
+                outputJsonString.append(s);
+            }
+            System.out.print(outputJsonString);
+
+            // read any errors from the attempted command
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+        } catch (Exception e)   {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method takes a PDF file as input and extracts the text from it using Apache PDF Box
+     * @param fileName Input PDF File
+     * @author suruchi.shah
+     */
+    public void convertPdfToText(String fileName)  {
+        File inputFile = new File(fileName);
+        try {
+            PDDocument pd = PDDocument.load(inputFile);
+            System.out.println("Number of Pages:" + pd.getNumberOfPages());
+            System.out.println("Is Encrypted:" + pd.isEncrypted());
+            PDFTextStripper stripper = new PDFTextStripper();
+            System.out.println("CONTENT:" + stripper.getText(pd));
+            if (pd != null) {
+                pd.close();
+            }
+        } catch (Exception e)   {
+            e.printStackTrace();
+        }
+
     }
 }

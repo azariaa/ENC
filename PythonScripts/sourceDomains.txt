@@ -1,0 +1,6 @@
+GMAIL=gmail
+GOOGLE=google
+PIAZZA=piazza
+YAHOO!=yahoo
+SCS=cs
+CMU=andrew

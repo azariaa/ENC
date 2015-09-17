@@ -1,4 +1,4 @@
-package inmind.qa;
+package EmailClient.src.main.java.inmind.qa;
 
 /**
  * Created by ziy on 8/5/15.
