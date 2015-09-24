@@ -1,8 +1,7 @@
-package EmailClient.src.main.java.inmind.testing;
+package inmind.testing;
 
-import EmailClient.src.main.java.inmind.email.EmailOperations;
-import EmailClient.src.main.java.inmind.piazza.PiazzaApi;
-import EmailClient.src.main.java.inmind.qa.QuestionAnsweringAgent;
+import inmind.email.EmailOperations;
+import inmind.qa.QuestionAnsweringAgent;
 
 import java.io.FileReader;
 import java.util.Date;
@@ -24,12 +23,14 @@ public class Main {
 
     QuestionAnsweringAgent qa = new QuestionAnsweringAgent() {
       @Override
-      public void addDocument(String document) {
-        return;
+      public void addDocument(String document, String source)
+      {
+
       }
 
       @Override
-      public String getAnswer(String question) {
+      public String getAnswer(String question, String source)
+      {
         return "Test";
       }
     };

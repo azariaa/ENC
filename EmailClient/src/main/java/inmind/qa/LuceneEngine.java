@@ -1,3 +1,5 @@
+package inmind.qa;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -53,16 +55,28 @@ public class LuceneEngine implements QuestionAnsweringAgent{
    * @param fact Piazza fact to be stored
    * @throws IOException Thrown when the index cannot be read/write
    */
-  public void addDocument(String inDoc, String source) throws IOException {
+  public void addDocument(String inDoc, String source) {
     Document doc = new Document(); //Document to be indexed
     
     //TODO: Need to think of more fields in index
     doc.add(new TextField("content", inDoc, Field.Store.YES));
     doc.add(new TextField("source", source, Field.Store.YES));
-    LE_IndexWriter.addDocument(doc);
+    try
+    {
+      LE_IndexWriter.addDocument(doc);
+    } catch (IOException ex)
+    {
+      ex.printStackTrace();
+    }
   }
-  
-  /**
+
+    @Override
+    public String getAnswer(String question, String source)
+    {
+        return null;
+    }
+
+    /**
    * 
    * @param queryStr  Question to be answered
    * @param nHits     Max number of answers to be returned

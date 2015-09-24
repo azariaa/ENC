@@ -1,4 +1,4 @@
-package EmailClient.src.main.java.inmind.piazza;
+package inmind.piazza;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

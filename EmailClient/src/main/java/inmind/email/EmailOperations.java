@@ -1,15 +1,14 @@
-package EmailClient.src.main.java.inmind.email;
+package inmind.email;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
-import org.omg.SendingContext.RunTime;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.*;
-import java.util.Properties;
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * Created by Amos Azaria on 15-Jul-15.
