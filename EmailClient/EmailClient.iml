@@ -25,5 +25,7 @@
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-queries:5.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-sandbox:5.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-analyzers-common:5.3.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20141113" level="project" />
+    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.4" level="project" />
   </component>
 </module>

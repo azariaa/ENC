@@ -1,10 +1,9 @@
 package inmind.testing;
 
-import inmind.email.EmailOperations;
+import inmind.piazza.PiazzaApi;
 import inmind.qa.QuestionAnsweringAgent;
 
 import java.io.FileReader;
-import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -35,13 +34,19 @@ public class Main {
       }
     };
 
-    EmailOperations emailOperations = new EmailOperations(username, password, username);
-    Date lastFetchDate = new Date();
-    //n * 24 * 3600 * 1000 l (n is the number of days to add or subtract)
-    lastFetchDate = new Date(lastFetchDate.getTime() - 2 * 24 * 3600 * 1000l );
-    emailOperations.extractLastEmails(lastFetchDate, filePath);
-    emailOperations.preprocessExtractedEmails(filePath, sourceDomainFilePath, pythonScriptPaths);
-//    emailOperations.convertPdfToText("Sample.pdf");
+//    EmailOperations emailOperations = new EmailOperations(username, password, username);
+//    Date lastFetchDate = new Date();
+//    //n * 24 * 3600 * 1000 l (n is the number of days to add or subtract)
+//    lastFetchDate = new Date(lastFetchDate.getTime() - 2 * 24 * 3600 * 1000l );
+//    emailOperations.extractLastEmails(lastFetchDate, filePath);
+//    emailOperations.preprocessExtractedEmails(filePath, sourceDomainFilePath, pythonScriptPaths);
+////    emailOperations.convertPdfToText("Sample.pdf");
+
+      PiazzaApi piazzaApi = new PiazzaApi(username, password);
+      //piazzaApi.askQuestion("ie348yjty84c7","Amos testing", "Does this still work?", "other");
+      //piazzaApi.getFeed("ie348yjty84c7");
+      piazzaApi.getSyllabus("ie348yjty84c7");
+
   }
 
 }

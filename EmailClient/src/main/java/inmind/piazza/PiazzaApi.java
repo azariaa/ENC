@@ -1,7 +1,12 @@
 package inmind.piazza;
 
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -47,6 +52,61 @@ public class PiazzaApi
     public void askQuestion(String nid, String subject, String question, String folder)
     {
         performAction(PiazzaAction.question, "", nid, subject, question, folder);
+    }
+
+    public JSONArray getFeed(String nid)
+    {
+        String urlEnd = "network.get_my_feed";
+        if (cookie == null) //shouldn't really happen because is called in constructor
+        {
+            loginGetCookie();
+        }
+        try
+        {
+            String postUrl = "https://piazza.com/logic/api?" + urlEnd;//"https://piazza.com/logic/api?content.create";
+
+            URL obj = new URL(postUrl);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            //using post
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", browser);
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+            con.setRequestProperty("Cookie", cookie);
+
+            String parameters = "{\"method\":\"" + urlEnd + "\",\"params\":{\"nid\":\"" + nid + "\"}}";
+
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(parameters);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            if (responseCode == 200)
+            {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                StringBuilder allFeed = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                {
+                    allFeed.append(inputLine);
+                    //System.out.println(inputLine + "\n");
+                }
+                JSONObject jsonObject = new JSONObject(allFeed.toString());
+                JSONArray jsonArray = jsonObject.getJSONObject("result").getJSONArray("feed");
+                return jsonArray;
+            }
+            else
+            {
+                System.out.println("S: error. (response code is: " + responseCode + ")");
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     private void performAction(PiazzaAction action, String cid, String nid, String subject, String content, String folder)
@@ -132,6 +192,25 @@ public class PiazzaApi
         {
             ex.printStackTrace();
         }
+    }
+
+
+    public File getSyllabus(String nid)
+    {
+        try
+        {
+            //ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            File tempFile = File.createTempFile("syllabus", ".pdf");
+            FileUtils.copyURLToFile(new URL("https://piazza.com/class_profile/syllabus/" + nid), tempFile);
+            // Delete temp file when program exits.
+            tempFile.deleteOnExit();
+            return tempFile;
+
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     /**
