@@ -1,18 +1,21 @@
-package inmind.email;
+package EmailClient.src.main.java.inmind.email;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.*;
 import java.util.Date;
 import java.util.Properties;
 
 /**
  * Created by Amos Azaria on 15-Jul-15.
- * Modified by Suruchi Shah on 13-Sept-15
+ * @modifiedBy suruchis (Suruchi Shah) on 13-Sept-15
  */
 public class EmailOperations
 {
@@ -160,36 +163,51 @@ public class EmailOperations
         }
     }
 
-    public void preprocessExtractedEmails(String inputFileName, String sourceFile, String pythonScriptsPath) {
+    /**
+     *
+     * @param inputFileName file containing the content of the emails (emailsContent.txt)
+     * @param sourceFile domain source file (sourceDomains.txt)
+     * @param pythonScriptsPath path to the python script (PythonScripts/)
+     * @author suruchis (Suruchi Shah)
+     */
+    public JSONArray preprocessExtractedEmails(String inputFileName, String sourceFile, String pythonScriptsPath) {
 
         String s = null;
+        JSONArray allEmail = null;
         try {
             Process p = Runtime.getRuntime().exec(new String[]{"python", pythonScriptsPath + "/extractEmailContent.py", inputFileName, sourceFile});
 
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
+            // read any errors from the attempted command
+            boolean errorExists = false;
+            while ((s = stdError.readLine()) != null) {
+                errorExists = true;
+            }
+            if(errorExists) {
+                System.out.println("Error in the system: " + s);
+                throw new Exception("Error in pre processing emails. Source: python script");
+            }
+
             // read the output from the command
             StringBuilder outputJsonString = new StringBuilder();
             while ((s = stdInput.readLine()) != null) {
                 outputJsonString.append(s);
             }
-            System.out.print(outputJsonString);
+            JSONObject jsonObj = new JSONObject(outputJsonString.toString());
+            allEmail = jsonObj.getJSONArray("AllEmails");
 
-            // read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
-            while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
-            }
-        } catch (Exception e)   {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return  allEmail;
     }
 
     /**
      * This method takes a PDF file as input and extracts the text from it using Apache PDF Box
      * @param fileName Input PDF File
-     * @author suruchi.shah
+     * @author suruchis (Suruchi Shah)
      */
     public void convertPdfToText(String fileName)  {
         File inputFile = new File(fileName);

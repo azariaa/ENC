@@ -1,4 +1,4 @@
-package inmind.piazza;
+package EmailClient.src.main.java.inmind.piazza;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;

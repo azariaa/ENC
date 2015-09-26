@@ -1,4 +1,4 @@
-package inmind.qa;
+package EmailClient.src.main.java.inmind.qa;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -22,13 +22,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import inmind.qa.QuestionAnsweringAgent;
-
 /**
  * @author zal (Salvador Medina)
+ * @modified suruchis (Suruchi Shah)
  * @version 0.1
  */
-public class LuceneEngine implements QuestionAnsweringAgent{
+public class LuceneEngine implements QuestionAnsweringAgent {
   StandardAnalyzer  LE_InputAnalyzer; // Text analyzer for fact input and query
   IndexWriter       LE_IndexWriter;   // Index writer instance
   Directory         LE_IndexDir;      // Index location in local disk
@@ -39,8 +38,9 @@ public class LuceneEngine implements QuestionAnsweringAgent{
    * @throws IOException Thrown when the indexPath cannot be accessed
    */
   public LuceneEngine(String indexPath) throws IOException{
-    //StandardAnalyzer: 
-    //tokenizes, removes punctutation marks and stopwords and lowerercases
+
+    //Using StandardAnalyzer:
+    //tokenizes, removes punctuation marks and stop-words and lowercase terms
     LE_InputAnalyzer = new StandardAnalyzer(); 
 
     // set the index location and create its writer
@@ -49,34 +49,31 @@ public class LuceneEngine implements QuestionAnsweringAgent{
     IndexWriterConfig config = new IndexWriterConfig(LE_InputAnalyzer);
     LE_IndexWriter = new IndexWriter(LE_IndexDir, config);
   }
-  
+
   /**
-   * 
-   * @param fact Piazza fact to be stored
+   * This method adds a document to be indexed in Lucene
+   * @param indexDocument object which contains all the information about the content to be indexed
    * @throws IOException Thrown when the index cannot be read/write
+   * @author suruchis
    */
-  public void addDocument(String inDoc, String source) {
+  public void addDocument(IndexDocument indexDocument) {
     Document doc = new Document(); //Document to be indexed
-    
-    //TODO: Need to think of more fields in index
-    doc.add(new TextField("content", inDoc, Field.Store.YES));
-    doc.add(new TextField("source", source, Field.Store.YES));
-    try
-    {
+
+    java.lang.reflect.Field[] fields = IndexDocument.class.getFields();
+    for(int fieldIndex = 0; fieldIndex<fields.length; fieldIndex++) {
+      String fieldName = fields[fieldIndex].getName();
+      // Syntax: doc.add(new TextField("content", inDoc, Field.Store.YES));
+      doc.add(new TextField(fieldName, indexDocument.getFieldValue(fieldName).toString(), Field.Store.YES));
+    }
+
+    try {
       LE_IndexWriter.addDocument(doc);
-    } catch (IOException ex)
-    {
-      ex.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
-    @Override
-    public String getAnswer(String question, String source)
-    {
-        return null;
-    }
-
-    /**
+  /**
    * 
    * @param queryStr  Question to be answered
    * @param nHits     Max number of answers to be returned
@@ -99,9 +96,16 @@ public class LuceneEngine implements QuestionAnsweringAgent{
     for(int i=0;i<hits.length;++i) {
       int docId = hits[i].doc;
       Document d = searcher.doc(docId);
-      queryRes.add(d.get("fact"));
+      queryRes.add(d.get("content"));
     }
     
     return queryRes;
   }
+
+  @Override
+  public String getAnswer(String question, String source)
+  {
+    return null;
+  }
+
 }
