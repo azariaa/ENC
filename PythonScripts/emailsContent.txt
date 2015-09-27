@@ -1,4 +1,60 @@
 <EMAIL>
+EMAILID:896
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Sun Sep 27 00:39:51 EDT 2015
+SENTDATE:Sun Sep 27 00:39:47 EDT 2015
+SUBJECT:Input question id order
+CONTENT:Your classmate posted a new Question. 
+
+Input question id order
+
+The write up requires the output to be in the ascending order of question id. My question is can we assume that the questions will be in order in the input file? Because the questions in the given input file seems are all in ascending order. 
+
+Go to https://piazza.com/class?cid=if20oynbgzb74d&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @80. Follow it to get notified when a response comes in: https://piazza.com/follow/if20oynbgzb74d/gP8MKi0qJrR/2a027ef5 
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to https://piazza.com/login to sign in and manage your email preferences or proceed to https://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
+</EMAIL>
+<EMAIL>
+EMAILID:895
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Sat Sep 26 21:48:13 EDT 2015
+SENTDATE:Sat Sep 26 21:48:10 EDT 2015
+SUBJECT:StatusCallbackListenerImpl
+CONTENT:Your classmate posted a new Question. 
+
+StatusCallbackListenerImpl
+
+What is the purpose of StatusCallbackListenerImpl in the template? Are we supposed to modify it?
+
+Go to https://piazza.com/class?cid=if1uka2h2xs1q&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @79. Follow it to get notified when a response comes in: https://piazza.com/follow/if1uka2h2xs1q/gP8MKi0qJrR/a42cfee8 
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to https://piazza.com/login to sign in and manage your email preferences or proceed to https://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
+</EMAIL>
+<EMAIL>
 EMAILID:894
 FROM:11-791 on Piazza <no-reply@piazza.com>,
 RECIPIENT:inmindenc@gmail.com,
@@ -151,4 +207,63 @@ Contact us at team@piazza.com
 
 
 You're receiving this email because inmindenc@gmail.com is enrolled in TEST 101 at Carnegie Mellon University. Go to http://piazza.com/login to sign in and manage your email preferences or proceed to http://piazza.com/remove/gP8MKi0qJrR/ie348yjty84c7 to un-enroll from this class.
+</EMAIL>
+<EMAIL>
+EMAILID:889
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Thu Sep 24 08:52:52 EDT 2015
+SENTDATE:Thu Sep 24 08:52:50 EDT 2015
+SUBJECT:[Instr Note] Updated Main.java in the template project
+CONTENT:Instructor Jun Araki posted a new Note. Your instructor selected to notify everyone in real time of this post, bypassing user email preferences.
+
+Updated Main.java in the template project
+
+We have updated Main.java in the template project a little in order to clarify how to access a CAS Consumer from CPE programmatically, adding some comments.  Please reload the PI4 writeup page, and download the updated template project.  The update on Main.java is the only difference from the template project that we previously distributed.
+
+Go to https://piazza.com/class?cid=iey7zhqe6wv2nw&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @74.  
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to https://piazza.com/login to sign in and manage your email preferences or proceed to https://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
+</EMAIL>
+<EMAIL>
+EMAILID:888
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Wed Sep 23 21:59:30 EDT 2015
+SENTDATE:Wed Sep 23 21:59:27 EDT 2015
+SUBJECT:Passage label = 2?
+CONTENT:Your classmate posted a new Question. 
+
+Passage label = 2?
+
+Some of the passages are labeled 2, rather than 1 or -1. What does that mean?
+
+Ex.
+2316 XIE19970528.0246 2 VIENNA, May 27 (Xinhua) -- Austria's AUA airline and Air China's office here held a ceremony today to celebrate the opening of AUA's air route to Shanghai, China's largest city.2316 XIE19991030.0005 2 The agency said the eight PKK members from European countries arrived in Istanbul, the largest city of Turkey, Friday afternoon aboard a passenger plane of the Austrian Airlines from Vienna, capital of Austri
+
+Go to http://piazza.com/class?cid=iexkn1clh0f5u7&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @73. Follow it to get notified when a response comes in: http://piazza.com/follow/iexkn1clh0f5u7/gP8MKi0qJrR/673f6243 
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to http://piazza.com/login to sign in and manage your email preferences or proceed to http://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
 </EMAIL>

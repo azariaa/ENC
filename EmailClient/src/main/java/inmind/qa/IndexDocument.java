@@ -10,26 +10,54 @@ import java.util.Date;
  * @date 9/26/15
  */
 public class IndexDocument {
-    public String source;
-    public String content;
-    public Date date;
-    public String subject;
+    private String source;
+    private String content;
+    private Date date;
+    private String subject;
 
     public Object getFieldValue(String fieldName)   {
         switch(fieldName)   {
             case "source":
-                System.out.print("here");
-                return source;
+                return getSource();
             case "content":
-                System.out.print("here1");
-                return content;
+                return getContent();
             case "date":
-                System.out.print("here2");
-                return date;
+                return getDate();
             case "subject":
-                System.out.print("here3");
-                return subject;
+                return getSubject();
         }
         return null;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }

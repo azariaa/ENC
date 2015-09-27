@@ -28,9 +28,9 @@ import java.util.List;
  * @version 0.1
  */
 public class LuceneEngine implements QuestionAnsweringAgent {
-  StandardAnalyzer  LE_InputAnalyzer; // Text analyzer for fact input and query
-  IndexWriter       LE_IndexWriter;   // Index writer instance
-  Directory         LE_IndexDir;      // Index location in local disk
+  public static StandardAnalyzer  LE_InputAnalyzer; // Text analyzer for fact input and query
+  public static IndexWriter       LE_IndexWriter;   // Index writer instance
+  private static Directory         LE_IndexDir;      // Index location in local disk
   
   /**
    * 
@@ -41,7 +41,7 @@ public class LuceneEngine implements QuestionAnsweringAgent {
 
     //Using StandardAnalyzer:
     //tokenizes, removes punctuation marks and stop-words and lowercase terms
-    LE_InputAnalyzer = new StandardAnalyzer(); 
+    LE_InputAnalyzer = new StandardAnalyzer();
 
     // set the index location and create its writer
     //TODO: Check which other indexes exist as in DB or local disk
@@ -52,25 +52,26 @@ public class LuceneEngine implements QuestionAnsweringAgent {
 
   /**
    * This method adds a document to be indexed in Lucene
+   * Can use LUKE to check the indexed files: java -jar lukeall-4.0.0-ALPHA.jar
    * @param indexDocument object which contains all the information about the content to be indexed
    * @throws IOException Thrown when the index cannot be read/write
    * @author suruchis
    */
-  public void addDocument(IndexDocument indexDocument) {
+  public static void addDocument(IndexDocument indexDocument) throws Exception {
     Document doc = new Document(); //Document to be indexed
 
-    java.lang.reflect.Field[] fields = IndexDocument.class.getFields();
+    java.lang.reflect.Field[] fields = IndexDocument.class.getDeclaredFields();
     for(int fieldIndex = 0; fieldIndex<fields.length; fieldIndex++) {
+      fields[fieldIndex].setAccessible(true);
       String fieldName = fields[fieldIndex].getName();
       // Syntax: doc.add(new TextField("content", inDoc, Field.Store.YES));
       doc.add(new TextField(fieldName, indexDocument.getFieldValue(fieldName).toString(), Field.Store.YES));
     }
+    LE_IndexWriter.addDocument(doc);
+  }
 
-    try {
-      LE_IndexWriter.addDocument(doc);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  public void addDocument(String title, String isbn) {
+    return;
   }
 
   /**
@@ -81,22 +82,25 @@ public class LuceneEngine implements QuestionAnsweringAgent {
    * @throws IOException Thrown when the index cannot be read/write
    * @throws ParseException Thrown when the query string is in an invalid encoding 
    */
-  public List<String> getAnswer(String queryStr, int nHits) throws IOException, ParseException {
+  public static List<String> searchIndex(String queryStr, String field, int nHits) throws IOException, ParseException {
     List<String> queryRes = new ArrayList<String>();
-   
-    Query q = new QueryParser( "content", LE_InputAnalyzer).parse(queryStr);
-    
+
+    QueryParser queryParser = new QueryParser(field, LE_InputAnalyzer);
+    Query query = queryParser.parse(queryStr);
+
     IndexReader reader = DirectoryReader.open(LE_IndexDir);
-    IndexSearcher searcher = new IndexSearcher(reader);
+    IndexSearcher indexSearcher = new IndexSearcher(reader);
     TopScoreDocCollector collector = TopScoreDocCollector.create(nHits);
-    
-    searcher.search(q, collector);
+    indexSearcher.search(query, collector);
+
     ScoreDoc[] hits = collector.topDocs().scoreDocs;
+    System.out.println("Found " + collector.getTotalHits() + " hit(s).");
     
-    for(int i=0;i<hits.length;++i) {
+    for(int i = 0; i < hits.length; ++i) {
       int docId = hits[i].doc;
-      Document d = searcher.doc(docId);
-      queryRes.add(d.get("content"));
+      Document d = indexSearcher.doc(docId);
+      System.out.println(d.get(field));
+      queryRes.add(d.get(field));
     }
     
     return queryRes;
