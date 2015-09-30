@@ -17,6 +17,7 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -110,6 +111,26 @@ public class LuceneEngine implements QuestionAnsweringAgent {
   public String getAnswer(String question, String source)
   {
     return null;
+  }
+
+  /**
+   * Check if the Index folder exists already at the defined part.
+   * If not, create a new folder
+   * @param indexPath index folder location
+   */
+  public void checkIndexFolderExists(String indexPath)  {
+
+    File indexDir = new File(indexPath);
+
+    // If the directory does not exist, create it
+    if (!indexDir.exists()) {
+      try{
+        indexDir.mkdir();
+      }
+      catch(SecurityException se){
+        //handle it
+      }
+    }
   }
 
 }

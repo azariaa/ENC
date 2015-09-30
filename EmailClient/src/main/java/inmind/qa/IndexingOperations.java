@@ -25,6 +25,7 @@ public class IndexingOperations {
             e.printStackTrace();
         }
     }
+
     public String getIndexPath() {
         return indexPath;
     }
@@ -38,7 +39,7 @@ public class IndexingOperations {
      * Condition: only if email type = PIAZZA and type is NOT question
      * @param emailsArray
      */
-    public void addEmailDocuments(JSONArray emailsArray)  {
+    public static void addEmailDocuments(JSONArray emailsArray)  {
         IndexDocument document;
         try {
             for (int i = 0; i < emailsArray.length(); i++) {
@@ -57,5 +58,17 @@ public class IndexingOperations {
             e.printStackTrace();
         }
         System.out.println("All recent emails have been indexed at " + indexPath);
+    }
+
+    public static void addPiazzaPosts(JSONArray feedArray)    {
+
+        try {
+            for (int i = 0; i < feedArray.length(); i++) {
+                JSONObject object = feedArray.getJSONObject(i);
+
+            }
+        } catch (Exception e)   {
+
+        }
     }
 }

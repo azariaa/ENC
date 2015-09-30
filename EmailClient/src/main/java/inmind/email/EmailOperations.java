@@ -19,9 +19,9 @@ import java.util.Properties;
  */
 public class EmailOperations
 {
-    String username;
-    String password;
-    String emailAddr;
+    private static String username;
+    private static String password;
+    private static String emailAddr;
 
     public EmailOperations(String username, String password, String emailAddr)
     {
@@ -30,7 +30,7 @@ public class EmailOperations
         this.emailAddr = emailAddr;
     }
 
-    public void printLastEmails(int emailsToFetch)
+    public static void printLastEmails(int emailsToFetch)
     {
         Properties props = new Properties();
         props.setProperty("mail.store.protocol", "imaps");
@@ -75,7 +75,7 @@ public class EmailOperations
      * @param fileName This is the path of the file where the output will be stored
      * @author suruchi.shah
      */
-    public void extractLastEmails(Date lastFetchDate, String fileName)    {
+    public static void extractLastEmails(Date lastFetchDate, String fileName)    {
         Properties props = new Properties();
         props.setProperty("mail.store.protocol", "imaps");
         BufferedWriter writer = null;
@@ -130,7 +130,7 @@ public class EmailOperations
         }
     }
 
-    public void sendEmail(String subject, String body, String recipient)
+    public static void sendEmail(String subject, String body, String recipient)
     {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -170,7 +170,7 @@ public class EmailOperations
      * @param pythonScriptsPath path to the python script (PythonScripts/)
      * @author suruchis (Suruchi Shah)
      */
-    public JSONArray preprocessExtractedEmails(String inputFileName, String sourceFile, String pythonScriptsPath) {
+    public static JSONArray preprocessExtractedEmails(String inputFileName, String sourceFile, String pythonScriptsPath) {
 
         String s = null;
         JSONArray allEmail = null;
@@ -209,7 +209,7 @@ public class EmailOperations
      * @param fileName Input PDF File
      * @author suruchis (Suruchi Shah)
      */
-    public void convertPdfToText(String fileName)  {
+    public static void convertPdfToText(String fileName)  {
         File inputFile = new File(fileName);
         try {
             PDDocument pd = PDDocument.load(inputFile);

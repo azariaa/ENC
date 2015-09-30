@@ -16,8 +16,8 @@ import java.net.URL;
  */
 public class PiazzaApi
 {
-    private String userEmail = "inmindenc@gmail.com";
-    private String password = "CNEdnimni";
+    private String userEmail;
+    private String password;
     static final String browser = "Mozilla/5.0";
 
     private String cookie = null;
@@ -63,7 +63,7 @@ public class PiazzaApi
         }
         try
         {
-            String postUrl = "https://piazza.com/logic/api?" + urlEnd;//"https://piazza.com/logic/api?content.create";
+            String postUrl = "https://piazza.com/logic/api?" + urlEnd;
 
             URL obj = new URL(postUrl);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -96,6 +96,60 @@ public class PiazzaApi
                 }
                 JSONObject jsonObject = new JSONObject(allFeed.toString());
                 JSONArray jsonArray = jsonObject.getJSONObject("result").getJSONArray("feed");
+                return jsonArray;
+            }
+            else
+            {
+                System.out.println("S: error. (response code is: " + responseCode + ")");
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public JSONArray getFeedFollowup(String nid, String cid)    {
+        String urlEnd = "content.get";
+        if (cookie == null) //shouldn't really happen because is called in constructor
+        {
+            loginGetCookie();
+        }
+        try
+        {
+            String postUrl = "https://piazza.com/logic/api?" + urlEnd;
+
+            URL obj = new URL(postUrl);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            //using post
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", browser);
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+            con.setRequestProperty("Cookie", cookie);
+
+            String parameters = "{\"method\":\"" + urlEnd + "\",\"params\":{\"nid\":\"" + nid + "\", \"cid\":\"" + cid + "\"}}";
+
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(parameters);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            if (responseCode == 200)
+            {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                StringBuilder allFeed = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                {
+                    allFeed.append(inputLine);
+                    //System.out.println(inputLine + "\n");
+                }
+                JSONObject jsonObject = new JSONObject(allFeed.toString());
+                JSONArray jsonArray = jsonObject.getJSONObject("result").getJSONArray("children");
                 return jsonArray;
             }
             else
