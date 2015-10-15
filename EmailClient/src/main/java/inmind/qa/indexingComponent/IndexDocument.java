@@ -1,4 +1,4 @@
-package EmailClient.src.main.java.inmind.qa;
+package EmailClient.src.main.java.inmind.qa.indexingComponent;
 
 
 import java.util.Date;

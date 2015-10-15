@@ -39,14 +39,14 @@ public class PiazzaApi
      * @param cid
      * @param answer
      */
-    public void answerQuestion(String cid, String answer)
+    public void answerQuestion(String cid, String nid, String answer)
     {
-        performAction(PiazzaAction.answer, cid, "", "", answer, "");
+        performAction(PiazzaAction.answer, cid, nid, "", answer, "");
     }
 
-    public void followup(String cid, String question)
+    public void followup(String cid, String nid, String question)
     {
-        performAction(PiazzaAction.followup, cid, "", question, "", "");
+        performAction(PiazzaAction.followup, cid, nid, question, "", "");
     }
 
     public void askQuestion(String nid, String subject, String question, String folder)
@@ -54,8 +54,7 @@ public class PiazzaApi
         performAction(PiazzaAction.question, "", nid, subject, question, folder);
     }
 
-    public JSONArray getFeed(String nid)
-    {
+    public JSONArray getFeed(String nid) {
         String urlEnd = "network.get_my_feed";
         if (cookie == null) //shouldn't really happen because is called in constructor
         {
@@ -163,20 +162,80 @@ public class PiazzaApi
         return null;
     }
 
-    private void performAction(PiazzaAction action, String cid, String nid, String subject, String content, String folder)
-    {
+    public String getFeedFullContent(String nid, String cid)    {
+
+        String fullContent = "";
+        String urlEnd = "content.get";
+        if (cookie == null) //shouldn't really happen because is called in constructor
+        {
+            loginGetCookie();
+        }
+        try
+        {
+            String postUrl = "https://piazza.com/logic/api?" + urlEnd;
+            URL obj = new URL(postUrl);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            //using post
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", browser);
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+            con.setRequestProperty("Cookie", cookie);
+
+            String parameters = "{\"method\":\"" + urlEnd + "\",\"params\":{\"nid\":\"" + nid + "\", \"cid\":\"" + cid + "\"}}";
+
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(parameters);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            if (responseCode == 200)
+            {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                StringBuilder allFeed = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                {
+                    allFeed.append(inputLine);
+                    //System.out.println(inputLine + "\n");
+                }
+                JSONObject jsonObject = new JSONObject(allFeed.toString()).getJSONObject("result");
+                if (jsonObject.has("history")) {
+                    JSONArray jsonArrayForHistory = jsonObject.getJSONArray("history");
+                    JSONObject historyObject = jsonArrayForHistory.getJSONObject(jsonArrayForHistory.length()-1);
+                    fullContent = historyObject.get("content").toString();
+                    return fullContent;
+                }
+                return fullContent;
+            }
+            else
+            {
+                System.out.println("S: error. (response code is: " + responseCode + ")");
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    private void performAction(PiazzaAction action, String cid, String nid, String subject, String content, String folder) {
+//        String aid = getAidToPost();
         String urlEnd = null;
         String type = null;
         if (action == PiazzaAction.answer)
         {
-            if (cid.isEmpty() || content.isEmpty())
+            if (cid.isEmpty() || content.isEmpty() || nid.isEmpty())
             {
                 System.out.println("Error, don't have enough information");
                 return;
             }
+            content = content.replace("\"","\\\"");
             urlEnd = "content.answer";
             type = "s_answer"; //using student answer, for instructor answer use "i_answer"
-
         }
         else if (action == PiazzaAction.followup)
         {
