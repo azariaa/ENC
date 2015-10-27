@@ -1,4 +1,4 @@
-package EmailClient.src.main.java.inmind.qa.indexingComponent;
+package EmailClient.src.main.java.inmind.qa.models;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,6 +13,7 @@ import java.util.List;
  * @date 9/29/15
  */
 public class PiazzaFeedObject {
+    public String sourceType = "post"; //Source Type defines the type of document to be indexed
     public String postId;
     public String courseId;
     public List<String> folders; // Tags (Example HW1, Other, HW2..)
@@ -27,11 +28,14 @@ public class PiazzaFeedObject {
     public String status;
     public String modified;
     public String updated;
+    public int upVotes;
     public int indexedDocId; // Used for retrieval
     public List<PiazzaFeedResponse> followups; //denoted by "log", size defines everything about the list
 
     public Object getFieldValue(String fieldName)   {
         switch(fieldName)   {
+            case "sourceType":
+                return sourceType;
             case "postId":
                 return postId;
             case "courseId":
@@ -60,6 +64,8 @@ public class PiazzaFeedObject {
                 return modified;
             case "updated":
                 return updated;
+            case "upVotes":
+                return upVotes;
             case "indexedDocId":
                 return indexedDocId;
             case "followups":
@@ -110,6 +116,9 @@ public class PiazzaFeedObject {
                 break;
             case "modified":
                 modified = value.toString();
+                break;
+            case "upVotes":
+                upVotes = Integer.parseInt(value.toString());
                 break;
             case "indexedDocId":
                 indexedDocId = Integer.parseInt(value.toString());

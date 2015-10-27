@@ -1,0 +1,18 @@
+<p></p>
+<p>I&#39;m probably missing something stupid with how I should set up the paths in eclipse, but when I run my own main I&#39;m getting this error. The class that it can&#39;t find is the one linked in the deploy~.xml. What should I be doing to avoid this?</p>
+<p></p>
+<p>Caused by: org.apache.uima.resource.ResourceInitializationException: The class org.apache.uima.aae.jms_adapter.JmsAnalysisEngineServiceAdapter could not be found. (Descriptor: file:/Users/main/git/pi-dclothia/pi-dclothia/src/main/resources/descriptors/ranker_client.xml)</p>
+<p> at org.apache.uima.impl.CustomResourceFactory_impl.produceResource(CustomResourceFactory_impl.java:63)</p>
+<p> at org.apache.uima.impl.CompositeResourceFactory_impl.produceResource(CompositeResourceFactory_impl.java:62)</p>
+<p> at org.apache.uima.UIMAFramework.produceResource(UIMAFramework.java:279)</p>
+<p> at org.apache.uima.UIMAFramework.produceAnalysisEngine(UIMAFramework.java:407)</p>
+<p> at org.apache.uima.analysis_engine.asb.impl.ASB_impl.setup(ASB_impl.java:256)</p>
+<p> at org.apache.uima.analysis_engine.impl.AggregateAnalysisEngine_impl.initASB(AggregateAnalysisEngine_impl.java:429)</p>
+<p> at org.apache.uima.analysis_engine.impl.AggregateAnalysisEngine_impl.initializeAggregateAnalysisEngine(AggregateAnalysisEngine_impl.java:373)</p>
+<p> at org.apache.uima.analysis_engine.impl.AggregateAnalysisEngine_impl.initialize(AggregateAnalysisEngine_impl.java:186)</p>
+<p> at org.apache.uima.impl.AnalysisEngineFactory_impl.produceResource(AnalysisEngineFactory_impl.java:94)</p>
+<p> at org.apache.uima.impl.CompositeResourceFactory_impl.produceResource(CompositeResourceFactory_impl.java:62)</p>
+<p> at org.apache.uima.UIMAFramework.produceResource(UIMAFramework.java:279)</p>
+<p> at org.apache.uima.UIMAFramework.produceAnalysisEngine(UIMAFramework.java:371)</p>
+<p> at Main.main(Main.java:41)</p>
+<p></p>

@@ -2,17 +2,18 @@ package EmailClient.src.main.java.inmind.qa.answeringComponent;
 
 import EmailClient.src.main.java.inmind.qa.indexingComponent.Index;
 import EmailClient.src.main.java.inmind.qa.indexingComponent.LuceneEngine;
-import EmailClient.src.main.java.inmind.qa.indexingComponent.PiazzaFeedObject;
-import EmailClient.src.main.java.inmind.qa.indexingComponent.PiazzaFeedResponse;
+import EmailClient.src.main.java.inmind.qa.models.PiazzaFeedObject;
+import EmailClient.src.main.java.inmind.qa.models.PiazzaFeedResponse;
+import EmailClient.src.main.java.inmind.qa.models.PiazzaAttachment;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 /**
  * This class defines the operations for querying the index and returning the answers
@@ -20,16 +21,36 @@ import java.util.List;
  * Date: 9/29/15
  */
 public class AnswerPreprocess {
-    private List<String> QUESTION_TYPES = new ArrayList<String>();
     private String PYTHON_SCRIPTS_PATH;
     private static String CONTENT_FILE = "content.txt";
     private static String QUERY_FILE = "query.txt";
-    private String[] FIELDS = new String[]{"followups", "subject", "content"};
-    private QuestionType QUESTION_TYPE;
+    private String[] FIELDS = new String[] {"followups", "subject", "content"};
+    private List<String> ALL_POST_IDS;
+    private static String DISCLAIMER;
 
-    public AnswerPreprocess(String scriptPath)   {
+    public AnswerPreprocess(String scriptPath, List<String> postIds)   {
         PYTHON_SCRIPTS_PATH = scriptPath;
-        populateQuestionTypes();
+        ALL_POST_IDS = postIds;
+        loadDisclaimerText(PYTHON_SCRIPTS_PATH);
+    }
+
+    public void loadDisclaimerText(String PYTHON_SCRIPTS_PATH)    {
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(PYTHON_SCRIPTS_PATH + "disclaimer.txt"));
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            br.close();
+            DISCLAIMER = sb.toString();
+        } catch (Exception e)   {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -42,7 +63,7 @@ public class AnswerPreprocess {
         try {
             LuceneEngine luceneEngine = new LuceneEngine();
             Query query = processRawQuery(rawQueryString);
-            List<PiazzaFeedObject> documents =  luceneEngine.searchIndexForMatchingDocuments(query, 10);
+            List<Object> documents = luceneEngine.searchIndexForMatchingDocuments(query, 10);
             List<String> responses = luceneEngine.searchIndex(query, rawQueryString, FIELDS, 10);
 
             for(String responseContent: responses)  {
@@ -53,7 +74,7 @@ public class AnswerPreprocess {
                 // followups and use that as the content string
                 if(field.equals("followups"))   {
                     responseContent = "";
-                    List<PiazzaFeedResponse> followups = getDocument(docId, documents).followups;
+                    List<PiazzaFeedResponse> followups = ((PiazzaFeedObject)getDocument(docId, documents)).followups;
                     for(PiazzaFeedResponse followup: followups) {
                         responseContent = responseContent + followup.content + "\n";
                         for(PiazzaFeedResponse subResponse: followup.subResponses)  {
@@ -64,23 +85,40 @@ public class AnswerPreprocess {
                 else {
                     responseContent = responseParts[2];
                 }
-                // Extract answering sentence from result and make it bold
+
+                // Extract answering sentence from result
+
                 String answeringSentence = extractAnswerSentence(responseContent, rawQueryString);
-                if(answeringSentence!=null && !answeringSentence.equals("")) {
+                if(answeringSentence != null && !answeringSentence.equals("") && !answeringSentence.equals("[]")) {
+
                     // Check if the response is from another question previously posted by Student.
-                    PiazzaFeedObject originalPost = getDocument(docId, documents);
-                    if(originalPost.type.equals("question") && !originalPost.tags.contains("unanswered") && field.equals("content"))  {
-                        answers.append("A similar question has been answered. See https://www.piazza.com/class/" + originalPost.courseId + "?cid="+originalPost.nr);
-                        break;
-                    } else if (!originalPost.type.equals("question")) {
-                        answers.append(answeringSentence.replace("[", "").replace("]", ""));
+                    Object originalPost = getDocument(docId, documents);
+                    if(originalPost.getClass().equals(PiazzaFeedObject.class)) {
+                        PiazzaFeedObject piazzaFeedObjectOriginalPost = (PiazzaFeedObject) originalPost;
+                        if(piazzaFeedObjectOriginalPost.type.equals("question")) {
+                            // Check if the post is answered, field is the content AND the post has NOT been deleted already
+                            if(!piazzaFeedObjectOriginalPost.tags.contains("unanswered")
+                                    && field.equals("content")
+                                    && ALL_POST_IDS.contains(piazzaFeedObjectOriginalPost.postId)) {
+
+                                answers.append("A similar question has been answered. See https://www.piazza.com/class/" + piazzaFeedObjectOriginalPost.courseId + "?cid=" + piazzaFeedObjectOriginalPost.nr + " for followup discussions\n\n");
+                            }
+                        }
+                        else {
+                            answers.append(answeringSentence.replace("[", "").replace("]", "") + "\n");
+                            answers.append("Source: " + "https://www.piazza.com/class/" + piazzaFeedObjectOriginalPost.courseId + "?cid=" + piazzaFeedObjectOriginalPost.nr + "\n\n");
+                        }
+                    } else {
+                        answers.append(answeringSentence.replace("[", "").replace("]", "") + "\n");
+                        answers.append("Source: " + originalPost.getClass().getName() + "\n\n");
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // Adding disclaimer to the answer
+        answers.append(DISCLAIMER);
         return answers;
     }
 
@@ -91,14 +129,6 @@ public class AnswerPreprocess {
      * @throws ParseException
      */
     public Query processRawQuery(String rawQuery) throws ParseException {
-
-        for(String qType: QUESTION_TYPES)   {
-            if (rawQuery.toLowerCase().startsWith(qType.toLowerCase())) {
-                QUESTION_TYPE = QuestionType.valueOf(qType);
-                rawQuery = rawQuery.substring(rawQuery.indexOf(" "));
-                break;
-            }
-        }
         MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, Index.INPUTANALYZER);
         queryParser.setDefaultOperator(QueryParser.OR_OPERATOR);
         Query query = queryParser.parse(QueryParser.escape(rawQuery));
@@ -151,25 +181,21 @@ public class AnswerPreprocess {
      * @param documents all matching documents
      * @return PiazzaFeedObject
      */
-    private PiazzaFeedObject getDocument(int docId, List<PiazzaFeedObject> documents) {
-        for(PiazzaFeedObject object: documents) {
-            if (object.indexedDocId == docId)
-                return object;
+    private Object getDocument(int docId, List<Object> documents) {
+        for (Object obj: documents) {
+            if(obj.getClass().equals(PiazzaFeedObject.class))   {
+                PiazzaFeedObject piazzaFeedObject = (PiazzaFeedObject) obj;
+                if(piazzaFeedObject.indexedDocId == docId)
+                    return piazzaFeedObject;
+            }
+            else if (obj.getClass().equals(PiazzaAttachment.class))   {
+                PiazzaAttachment piazzaAttachment = (PiazzaAttachment) obj;
+                if(piazzaAttachment.indexedDocId == docId)
+                    return piazzaAttachment;
+            }
         }
-        return null;
-    }
 
-    /**
-     * Populates the question types
-     */
-    private void populateQuestionTypes()    {
-        QUESTION_TYPES.add("WHAT");
-        QUESTION_TYPES.add("WHY");
-        QUESTION_TYPES.add("HOW");
-        QUESTION_TYPES.add("IS");
-        QUESTION_TYPES.add("WHERE");
-        QUESTION_TYPES.add("WHEN");
-        QUESTION_TYPES.add("WHO");
+        return null;
     }
 
     /**
@@ -190,26 +216,5 @@ public class AnswerPreprocess {
         } catch (Exception e)   {
             e.printStackTrace();
         }
-    }
-}
-
-enum QuestionType   {
-    WHAT("WHAT"),
-    WHY("WHY"),
-    HOW("HOW"),
-    IS("IS"),
-    WHERE("WHERE"),
-    WHEN("WHEN"),
-    DOES("DOES"),
-    WHO("WHO");
-
-    private final String text;
-
-    private QuestionType(final String text) {
-        this.text = text;
-    }
-
-    public String toString() {
-        return text;
     }
 }

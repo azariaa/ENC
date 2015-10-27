@@ -1,4 +1,4 @@
-package EmailClient.src.main.java.inmind.qa.indexingComponent;
+package EmailClient.src.main.java.inmind.qa.models;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ public class PiazzaFeedResponse {
     public boolean isAnonymous; // "anon"
     public String content; // "subject" This is the content
     public String type;
+    public int upVotes;
     public List<PiazzaFeedResponse> subResponses;
     public int numberOfAnswers; // "no_answer"
 }

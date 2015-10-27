@@ -12,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Amos Azaria on 30-Jul-15.
+ * @author suruchis (Suruchi Shah)
  */
 public class PiazzaApi
 {
@@ -223,7 +223,6 @@ public class PiazzaApi
     }
 
     private void performAction(PiazzaAction action, String cid, String nid, String subject, String content, String folder) {
-//        String aid = getAidToPost();
         String urlEnd = null;
         String type = null;
         if (action == PiazzaAction.answer)

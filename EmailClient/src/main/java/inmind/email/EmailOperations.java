@@ -204,25 +204,4 @@ public class EmailOperations
         return  allEmail;
     }
 
-    /**
-     * This method takes a PDF file as input and extracts the text from it using Apache PDF Box
-     * @param fileName Input PDF File
-     * @author suruchis (Suruchi Shah)
-     */
-    public static void convertPdfToText(String fileName)  {
-        File inputFile = new File(fileName);
-        try {
-            PDDocument pd = PDDocument.load(inputFile);
-            System.out.println("Number of Pages:" + pd.getNumberOfPages());
-            System.out.println("Is Encrypted:" + pd.isEncrypted());
-            PDFTextStripper stripper = new PDFTextStripper();
-            System.out.println("CONTENT:" + stripper.getText(pd));
-            if (pd != null) {
-                pd.close();
-            }
-        } catch (Exception e)   {
-            e.printStackTrace();
-        }
-
-    }
 }

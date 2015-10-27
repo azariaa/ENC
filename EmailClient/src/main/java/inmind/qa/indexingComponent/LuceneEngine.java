@@ -1,24 +1,19 @@
 package EmailClient.src.main.java.inmind.qa.indexingComponent;
 
+import EmailClient.src.main.java.inmind.qa.models.PiazzaAttachment;
+import EmailClient.src.main.java.inmind.qa.models.PiazzaFeedObject;
+import EmailClient.src.main.java.inmind.qa.utils.Utility;
 import com.google.gson.Gson;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 
-import javax.jdo.annotations.*;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +31,7 @@ public class LuceneEngine {
    * @param object PiazzaFeedObject type
    * @throws Exception
    */
-  public static void addDocument(PiazzaFeedObject object) throws Exception  {
+  public void addDocument(PiazzaFeedObject object) throws Exception  {
     Document doc = new Document(); // Document to be indexed
     java.lang.reflect.Field[] fields = PiazzaFeedObject.class.getDeclaredFields();
     for (int fieldIndex = 0; fieldIndex < fields.length; fieldIndex++)  {
@@ -48,6 +43,23 @@ public class LuceneEngine {
       } else {
         doc.add(new TextField(fieldName, object.getFieldValue(fieldName).toString(), Field.Store.YES));
       }
+    }
+    Index.INDEXWRITER.addDocument(doc);
+    Index.INDEXWRITER.commit();
+  }
+
+  /**
+   *
+   * @param piazzaAttachment
+   * @throws Exception
+   */
+  public void addDocument(PiazzaAttachment piazzaAttachment) throws Exception {
+    Document doc = new Document();
+    java.lang.reflect.Field[] fields = PiazzaAttachment.class.getDeclaredFields();
+    for (int fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
+      fields[fieldIndex].setAccessible(true);
+      String fieldName = fields[fieldIndex].getName();
+      doc.add(new TextField(fieldName, piazzaAttachment.getFieldValue(fieldName).toString(), Field.Store.YES));
     }
     Index.INDEXWRITER.addDocument(doc);
     Index.INDEXWRITER.commit();
@@ -87,6 +99,22 @@ public class LuceneEngine {
           }
         }
       }
+
+      // If no documents are selected even though there were hits, return the top hit
+      if(queryRes.size() == 0 && hits.length>0) {
+        int docId = hits[0].doc;
+        Document d = indexSearcher.doc(docId);
+
+        for (String field : fields) {
+          QueryParser queryParser = new QueryParser(field, Index.INPUTANALYZER);
+          queryParser.setDefaultOperator(QueryParser.OR_OPERATOR);
+          Query tempQuery = queryParser.parse(rawQuery);
+          Explanation ex = indexSearcher.explain(tempQuery, docId);
+          if (ex.isMatch()) {
+            queryRes.add(docId + "~~" + field +  "~~" + d.get(field));
+          }
+        }
+      }
     }
     return queryRes;
   }
@@ -100,9 +128,9 @@ public class LuceneEngine {
    * @throws IOException
    * @throws ParseException
    */
-  public List<PiazzaFeedObject> searchIndexForMatchingDocuments(Query query, int nHits) throws IOException, ParseException  {
+  public List<Object> searchIndexForMatchingDocuments(Query query, int nHits) throws IOException, ParseException  {
 
-    List<PiazzaFeedObject> returnDocuments = new ArrayList<PiazzaFeedObject>();
+    List<Object> returnDocuments = new ArrayList<Object>();
 
     if(Index.getINDEXREADER()!=null) {
       IndexSearcher indexSearcher = new IndexSearcher(Index.getINDEXREADER());
@@ -110,27 +138,76 @@ public class LuceneEngine {
 
       indexSearcher.search(query, collector);
 
-      Explanation explanation = indexSearcher.explain(query, 0);
-
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
       System.out.println("Found " + collector.getTotalHits() + " hit(s).");
 
       PiazzaFeedObject piazzaFeedObject = null;
+      PiazzaAttachment piazzaAttachment = null;
       for (int i = 0; i < hits.length; ++i) {
-        if(hits[i].score > SCORE_THRESHOLD || hits.length<=2) { // We only consider a document if there is a match greater than 0.2 threshold
+        if(hits[i].score > SCORE_THRESHOLD) { // We only consider a document if there is a match greater than 0.2 threshold
           int docId = hits[i].doc;
           Document d = indexSearcher.doc(docId);
+
+          // If returned document is of type "post"
+          if (d.get(Utility.SOURCE_TYPE).equals("post"))  {
+            piazzaFeedObject = new PiazzaFeedObject();
+            java.lang.reflect.Field[] piazzaFeedObjectFields = PiazzaFeedObject.class.getDeclaredFields();
+            for (int objFieldIndex = 0; objFieldIndex < piazzaFeedObjectFields.length; objFieldIndex++) {
+              piazzaFeedObjectFields[objFieldIndex].setAccessible(true);
+              String classFieldName = piazzaFeedObjectFields[objFieldIndex].getName();
+              if(classFieldName.equals("indexedDocId"))
+                piazzaFeedObject.setFieldValue(classFieldName, docId);
+              else
+                piazzaFeedObject.setFieldValue(classFieldName, d.get(classFieldName));
+            }
+            returnDocuments.add(piazzaFeedObject);
+          }
+          // Else if returned document is of type "attachment"
+          else if (d.get(Utility.SOURCE_TYPE).equals("attachments"))  {
+            piazzaAttachment = new PiazzaAttachment();
+            java.lang.reflect.Field[] piazzaAttachmentFields = PiazzaAttachment.class.getDeclaredFields();
+            for (int objFieldIndex = 0; objFieldIndex < piazzaAttachmentFields.length; objFieldIndex++) {
+              piazzaAttachmentFields[objFieldIndex].setAccessible(true);
+              String classFieldName = piazzaAttachmentFields[objFieldIndex].getName();
+              if(classFieldName.equals("indexedDocId"))
+                piazzaAttachment.setFieldValue(classFieldName, docId);
+              else
+                piazzaAttachment.setFieldValue(classFieldName, d.get(classFieldName));
+            }
+            returnDocuments.add(piazzaAttachment);
+          }
+        }
+      }
+
+      // If no documents are selected even though there were hits, return the top hit
+      if(returnDocuments.size() == 0 && hits.length>0) {
+        int docId = hits[0].doc;
+        Document d = indexSearcher.doc(docId);
+        if (d.get(Utility.SOURCE_TYPE).equals("post")) {
           piazzaFeedObject = new PiazzaFeedObject();
           java.lang.reflect.Field[] piazzaFeedObjectFields = PiazzaFeedObject.class.getDeclaredFields();
           for (int objFieldIndex = 0; objFieldIndex < piazzaFeedObjectFields.length; objFieldIndex++) {
             piazzaFeedObjectFields[objFieldIndex].setAccessible(true);
             String classFieldName = piazzaFeedObjectFields[objFieldIndex].getName();
-            if(classFieldName.equals("indexedDocId"))
+            if (classFieldName.equals("indexedDocId"))
               piazzaFeedObject.setFieldValue(classFieldName, docId);
             else
               piazzaFeedObject.setFieldValue(classFieldName, d.get(classFieldName));
           }
           returnDocuments.add(piazzaFeedObject);
+        }
+        else if (d.get(Utility.SOURCE_TYPE).equals("attachment"))  {
+          piazzaAttachment = new PiazzaAttachment();
+          java.lang.reflect.Field[] piazzaAttachmentFields = PiazzaAttachment.class.getDeclaredFields();
+          for (int objFieldIndex = 0; objFieldIndex < piazzaAttachmentFields.length; objFieldIndex++) {
+            piazzaAttachmentFields[objFieldIndex].setAccessible(true);
+            String classFieldName = piazzaAttachmentFields[objFieldIndex].getName();
+            if(classFieldName.equals("indexedDocId"))
+              piazzaAttachment.setFieldValue(classFieldName, docId);
+            else
+              piazzaAttachment.setFieldValue(classFieldName, d.get(classFieldName));
+          }
+          returnDocuments.add(piazzaAttachment);
         }
       }
     }
