@@ -1,9 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'Main'
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+mainClassName = 'GCalendar'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 version = '1.0'
 
 repositories {
@@ -11,6 +11,7 @@ repositories {
 }
 
 dependencies {
+    compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.sun.mail:javax.mail:1.5.4'
     compile 'org.apache.pdfbox:pdfbox:1.8.10'
     compile 'org.apache.lucene:lucene-core:5.3.0'
@@ -18,4 +19,13 @@ dependencies {
     compile 'org.apache.lucene:lucene-analyzers-common:5.3.0'
     compile 'org.json:json:20141113'
     compile 'commons-io:commons-io:2.4'
+    //compile 'com.google.api-client:google-api-client:1.21.0'
+    compile 'org.apache.httpcomponents:httpclient:4.3.4'
+
+//Calendar
+    compile 'com.google.api-client:google-api-client:1.20.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.20.0'
+    compile 'com.google.apis:google-api-services-calendar:v3-rev125-1.20.0'
+    //compile 'com.google.api.client:google-api-client-auth-oauth2:1.2.3-alpha'
+
 }

@@ -1,4 +1,4 @@
-package inmind.calendar;
+package main.java.inmind.Calendar;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -15,9 +15,7 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,7 +78,9 @@ public class GCalendar
     public static Credential authorize() throws IOException
     {
         // Load client secrets.
-        InputStream in = GCalendar.class.getResourceAsStream("/client_secret.json");//new FileInputStream("resources/client_secret.json");
+        //InputStream in = GCalendar.class.getResourceAsStream("client_secret.json");
+        
+        InputStream in = new FileInputStream("resources/client_secret.json");
 
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));

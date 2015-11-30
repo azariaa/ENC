@@ -74,7 +74,7 @@ public class PiazzaQA
 
     public static Date loadLastFetchDate(String pythonScriptPaths) {
         String filePath = pythonScriptPaths + "/tempContent/lastFetchDate.txt";
-        SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd hh:mm:ss yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy");
         Date d = null;
         try
         {
@@ -99,7 +99,7 @@ public class PiazzaQA
 
     public static void updateLastFetchDate(Date fetchDate, String pythonScriptPaths)    {
         String filePath = pythonScriptPaths + "/tempContent/lastFetchDate.txt";
-        SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd hh:mm:ss yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy");
         try {
             File fin = new File(filePath);
             FileOutputStream fis = new FileOutputStream(fin);

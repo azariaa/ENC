@@ -37,7 +37,7 @@ public class EventDetector
         {
             Map<String, String> parameters = new HashMap<>();
             parameters.put("Body", email.content); //"Do you want to meet at 2:00 to discuss about the birthday party for Bob?");
-            parameters.put("Sender", "No Name");//email.getAllSenders());//"Alan Black");
+            parameters.put("Sender", email.getAllSenders());//"Alan Black");
             parameters.put("Subject", email.subject);//"Birthday party");
             String response = Connection.callServer("http://birch.speech.cs.cmu.edu:5000/distract", parameters, true);
             JSONObject emailAsJson = new JSONObject(response);

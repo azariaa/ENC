@@ -1,6 +1,7 @@
 package main.java.inmind;
 
 import main.java.inmind.Calendar.EventDetector;
+import main.java.inmind.Calendar.GCalendar;
 import main.java.inmind.email.EmailInstance;
 import main.java.inmind.email.EmailOperations;
 import main.java.inmind.qa.piazza.PiazzaQA;
@@ -44,7 +45,7 @@ public class ActOnEmail
         Properties prop = new Properties();
         try
         {
-            prop.load(new FileReader("default.properties"));
+            prop.load(new FileReader("resources/default.properties"));
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -100,6 +101,13 @@ public class ActOnEmail
                     LOG.info("email info: what:" + eventInfo.what);
                     LOG.info("email info: who:" + eventInfo.who);
                     LOG.info("email info: when:" + eventInfo.when.toString());
+                    try
+                    {
+                        GCalendar.main(new String[]{});
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

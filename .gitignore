@@ -8,3 +8,6 @@ PythonScripts/stanford-ner-2014-06-16/
 PythonScripts/uwtime-1.0.0.jar
 EmailClient/build/
 EmailClient/.gradle/
+resources/default.properties
+resources/client_secret.json
+build/
