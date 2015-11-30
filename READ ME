@@ -19,3 +19,6 @@ Then an installation window appears.
 Go to the 'Models' tab and select 'wordnet', 'punkt' from under the 'Identifier' column. 
 Then click Download and it will install the necessary files. 
 Another file you need is under the Models tab, named maxent_treebank_pos_tagger.
+
+download stanford-ner-2014-06-16 and copy to PythonScripts/
+download uwtime-1.0.0.jar and copy to PythonScripts/
