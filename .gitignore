@@ -2,3 +2,5 @@
 EmailClient/.idea/
 GCalendar/.idea/
 *.class
+log/
+PiazzaFeedIndex/

@@ -1,0 +1,69 @@
+ALUMNI	Alumni House
+BH	Baker Hall
+BME	Biomedical Engineering
+BTEC	Bone Tissue Engineering Center
+C2S2	Center for Circuits & System Solutions
+CAPD	Center for Advanced Process Decision-Making
+CAPS	Center for Atmospheric Particle Studies
+CBI	Center for Bioimage Informatics
+CCFE	Center for Complex Fluids Engineering
+CEIC	The Carnegie Mellon Electricity Industry Center
+CenSCIR	Center for Sensed Critical Infrastructure Research
+CFA	College of Fine Arts
+ChemE	Chemical Engineering
+CIC	Collaborative Innovation Center
+CISR	Center for Iron and Steelmaking Research
+CivE or CEE	Civil and Environmental Engineering
+CMDS	Carnegie Mellon Dining Services
+CMRI	Carnegie Mellon Research Institute
+CNXT	Center for Nano-enabled Device and Energy Technologies
+CSE	Center for Sustainable Engineering
+CSIR	Center for the Study and Improvement of Regulation
+CSSI	Center for Silicon System Implementation
+CWBN	Center for Wireless and Broadband Networking
+CYERT	Cyert Hall	CYH
+CyLab	Carnegie Mellon CyLab
+DH	Doherty Hall
+DSSC	Data Storage Systems Center
+ECE	Electrical and Computer Engineering
+EDRC	Engineering & Design Research Center
+EDS	Elliot Dunlap Smith Hall
+EPP	Engineering and Public Policy
+G	Gymnasium	Gym
+GDI	Green Design Institute
+GES	Gesling Stadium
+GHC	Gates and Hillman Center	Gates Center  Gates Hillman	Gates Hillman Center
+GM-CM CRL	General Motors Collaborative Laboratory at Carnegie Mellon
+GYM	Weigand Gymnasium
+HBH	Hamburg Hall
+HBH	Hamburg Hall
+HH	Hamerschlag Hall
+HL	Hunt Library
+IA	GSIA (Tepper School of Business)
+ICES	Institute for Complex Engineered Systems
+INI	Information Networking Institute
+MechE OR ME	Mechanical Engineering
+MG	Morewood Gardens
+MI	Mellon Institute
+MM	Margaret Morrison Carnegie Hall	
+MMP	Margaret Morrison Plaza
+MRSEC	Materials Research Science and Engineering Center
+MSE	Materials Science Engineering
+NSH	Newell Simon Hall
+OIE	Office of International Education
+PCA	Purnell Center for the Arts
+PH	Porter Hall
+POS	Posner Hall (Tepper School of Business)
+PPB	Physical Plant Building
+PTC	Pittsburgh Technology Center - 2nd Avenue
+REH	Roberts Engineering Hall
+RH	Resnik House
+SCR	300 South Craig Street
+SEER	Steinbrenner Institute for Environmental Education and Research
+SEI	Software Engineering Institute
+SH	Scaife Hall
+UC	University Center	Cohon University Center
+WaterQUEST	Center for Water Quality in Urban Environmental Systems
+WEH	Wean Hall
+WH	Warner Hall
+WW	West Wing

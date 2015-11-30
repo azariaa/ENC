@@ -1,0 +1,133 @@
+<EMAIL>
+EMAILID:988
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Mon Nov 16 21:13:06 EST 2015
+SENTDATE:Mon Nov 16 21:12:35 EST 2015
+SUBJECT:[Instr Note] Note on SOLR URI's
+CONTENT:Instructor Leonid Boytsov posted a new Note. Your instructor selected to notify everyone in real time of this post, bypassing user email preferences.
+
+Note on SOLR URI's
+
+Hi guys,In SOLR, you have to use a slightly different address in the application. These addresses shouldn't contain '#'.
+
+In our case:
+1. http://ur.lti.cs.cmu.edu:8986/solr/medline
+2. http://metal.lti.cs.cmu.edu:8986/solr/medline
+3. http://gold.lti.cs.cmu.edu:8986/solr/medline
+
+As a reminder web-interface addresses are:
+Team 1 and 2 use http://ur.lti.cs.cmu.edu:8986/solr/#/medline
+Team 3 and 4 use http://metal.lti.cs.cmu.edu:8986/solr/#/medline
+Team 5 and 6 use http://gold.lti.cs.cmu.edu:8986/solr/#/medline
+
+
+Go to https://piazza.com/class?cid=ih2qw0cj2rb5yf&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @143.  
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to https://piazza.com/login to sign in and manage your email preferences or proceed to https://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
+</EMAIL>
+<EMAIL>
+EMAILID:987
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Mon Nov 16 20:39:04 EST 2015
+SENTDATE:Mon Nov 16 20:38:01 EST 2015
+SUBJECT:TPZ accepting submissions?
+CONTENT:Your classmate posted a new Question. 
+
+TPZ accepting submissions?
+
+I just ran the t2-submitter-ubuntu.x script, but got the now-familiar error message:
+Submission failed, server did not answer back. Please try again later.
+Is the TPZ server going to be up and running in time to hand in T2 submissions before the deadline, or should we just email the TAs our submissions?
+
+Go to https://piazza.com/class?cid=ih2pnny7c3i2m9&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @142. Follow it to get notified when a response comes in: https://piazza.com/follow/ih2pnny7c3i2m9/gP8MKi0qJrR/377e62c7 
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to https://piazza.com/login to sign in and manage your email preferences or proceed to https://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
+</EMAIL>
+<EMAIL>
+EMAILID:986
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Mon Nov 16 18:46:05 EST 2015
+SENTDATE:Mon Nov 16 18:45:53 EST 2015
+SUBJECT:Solr config file?
+CONTENT:Your classmate posted a new Question. 
+
+Solr config file?
+
+In trying to run a Solr search, I get this error:
+
+org.apache.uima.analysis_engine.AnalysisEngineProcessException: Annotator processing failed.  at org.apache.uima.analysis_engine.impl.PrimitiveAnalysisEngine_impl.callAnalysisComponentProcess(PrimitiveAnalysisEngine_impl.java:401) at org.apache.uima.analysis_engine.impl.PrimitiveAnalysisEngine_impl.processAndOutputNewCASes(PrimitiveAnalysisEngine_impl.java:308) at org.apache.uima.analysis_engine.asb.impl.ASB_impl$AggregateCasIterator.processUntilNextOutputCas(ASB_impl.java:570) at org.apache.uima.analysis_engine.asb.impl.ASB_impl$AggregateCasIterator.<init>(ASB_impl.java:412) at org.apache.uima.analysis_engine.asb.impl.ASB_impl.process(ASB_impl.java:344) at org.apache.uima.analysis_engine.impl.AggregateAnalysisEngine_impl.processAndOutputNewCASes(AggregateAnalysisEngine_impl.java:265) at org.apache.uima.analysis_engine.impl.AnalysisEngineImplBase.process(AnalysisEngineImplBase.java:269) at org.apache.uima.collection.impl.cpm.engine.ProcessingUnit.processNext(ProcessingUnit.java:893) at org.apache.uima.collection.impl.cpm.engine.ProcessingUnit.run(ProcessingUnit.java:575)Caused by: org.apache.solr.client.solrj.impl.HttpSolrClient$RemoteSolrException: Error from server at http://gold.lti.cs.cmu.edu:8986/solr/#/medline: Expected mime type application/octet-stream but got text/html. <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html>
+
+In googling for an explanation, the only supposed answer I found was that one should specify having a certain request handler in "solrconfig.xml."   Well, we don't have this file, nor "schema.xml," which also seems important.  I tried fetching a couple of default versions of those and putting them somewhere in the build path, but that doesn't seem to have helped the problem.   So I don't know what's up with this.   What's up with this?
+
+Go to https://piazza.com/class?cid=ih2lng9htgh51g&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @141. Follow it to get notified when a response comes in: https://piazza.com/follow/ih2lng9htgh51g/gP8MKi0qJrR/33f314aa 
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to https://piazza.com/login to sign in and manage your email preferences or proceed to https://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
+</EMAIL>
+<EMAIL>
+EMAILID:985
+FROM:11-791 on Piazza <no-reply@piazza.com>,
+RECIPIENT:inmindenc@gmail.com,
+RECEIVEDATE:Mon Nov 16 16:34:09 EST 2015
+SENTDATE:Mon Nov 16 16:33:09 EST 2015
+SUBJECT:[Instr Note] A clarification on the given training dataset
+CONTENT:Instructor Jun Araki posted a new Note. 
+
+A clarification on the given training dataset
+
+We have got a couple of questions about the output format of answers that your QA pipeline is expected to return.   A short answer is that we expect the QA system to output a one-dimensional list of answer items per question.
+
+Here is a long answer.  As you may have noticed in the training dataset, a factoid question has a 1-D array of gold standard answers, whereas a list question has a 2-D array of gold standard answers.  This is because there are many synonyms (semantically equivalent/similar words) in biomedical terminologies, and those synonyms are expanded in those answer arrays.  Given a question, the QA system should return a list of answer items, which will then be compared with the synonym-expanded answer list.  You will formalize details of the comparison in your evaluation component for T3.
+
+Also, please note that your QA pipeline will be expected to output snippets and evaluated with respect to snippets in addition to answers.
+
+Go to https://piazza.com/class?cid=ih2gwos8px74ok&nid=ic53erv8juk488&token=gP8MKi0qJrR to view. Search or link to this question with @140.  
+
+Sign up for more classes at http://piazza.com/cmu
+
+
+Want Piazza in all your classes?  Tell your professors and TAs today.  It's free!
+
+Thanks,
+The Piazza Team
+--
+Contact us at team@piazza.com
+
+
+You're receiving this email because inmindenc@gmail.com is enrolled in 11-791 at Carnegie Mellon University. Go to https://piazza.com/login to sign in and manage your email preferences or proceed to https://piazza.com/remove/gP8MKi0qJrR/ic53erv8juk488 to un-enroll from this class.
+</EMAIL>

@@ -87,7 +87,7 @@ class EmailContent(object):
 	def getEmailSource(self, senderText):
 		domain = senderText[senderText.index("@")+1:senderText.index("com")-1]
 		for key, value in self.sourceDomainDictionary.iteritems():
-			if key in domain:
+			if key == domain:
 				return value
 
 	# This method defines the flow of logic to get the type of email depending on source
@@ -122,7 +122,7 @@ class EmailContent(object):
 
 	# This method gets the relevant content for Piazza emails
 	def getPiazzaRelevantContent(self, contentText):
-		contentText = contentText[contentText.index("CONTENT:"):contentText.index("Go to https://piazza.com/class")]
+		contentText = contentText[contentText.index("CONTENT:"):contentText.index("Go to http")]
 		# We remove the first line from the piazza email because the first line contains text such as "Your classmate posted a new question"
 		sansfirstline = '\n'.join(contentText.split('\n')[1:]) 
 		return sansfirstline
@@ -130,7 +130,7 @@ class EmailContent(object):
 	# This method simply converts the dictionary into JSON and prints the final output
 	def generateFinalOutputJSON(self):
 		jsonarray = json.dumps(self.emailDictionary, ensure_ascii=False)
-		print jsonarray
+		print "{\"AllEmails\":" + jsonarray + "}"
 
 
 test = EmailContent()

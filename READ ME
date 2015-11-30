@@ -1,0 +1,21 @@
+READ ME
+------------------------------------------------------------------
+
+Requires Python 2.7
+Install the following to run Python Scripts
+
+sudo pip install beautifulsoup4
+sudo pip install -U nltk
+sudo pip install -U numpy
+
+
+To install NLTK documents, in python:
+type the following
+
+>> import nltk
+>> nltk.download()	
+
+Then an installation window appears. 
+Go to the 'Models' tab and select 'wordnet', 'punkt' from under the 'Identifier' column. 
+Then click Download and it will install the necessary files. 
+Another file you need is under the Models tab, named maxent_treebank_pos_tagger.
