@@ -22,3 +22,6 @@ Another file you need is under the Models tab, named maxent_treebank_pos_tagger.
 
 download stanford-ner-2014-06-16 and copy to PythonScripts/
 download uwtime-1.0.0.jar and copy to PythonScripts/
+
+create an default.properties file inside resources/default.properties
+get a client_secret.json from Google calendar API and put it in resources/client_secret.json

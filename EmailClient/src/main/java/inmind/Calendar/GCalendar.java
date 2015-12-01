@@ -11,13 +11,20 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Amos Azaria on 15-Jul-15.
@@ -54,7 +61,7 @@ public class GCalendar
     /**
      * Global instance of the scopes required by this quickstart.
      */
-    private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR_READONLY);
+    private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR);
 
     static
     {
@@ -69,6 +76,18 @@ public class GCalendar
         }
     }
 
+    Calendar calService;
+    public GCalendar()
+    {
+        try
+        {
+            calService = getCalendarService();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Creates an authorized Credential object.
      *
@@ -79,7 +98,7 @@ public class GCalendar
     {
         // Load client secrets.
         //InputStream in = GCalendar.class.getResourceAsStream("client_secret.json");
-        
+
         InputStream in = new FileInputStream("resources/client_secret.json");
 
         GoogleClientSecrets clientSecrets =
@@ -115,17 +134,88 @@ public class GCalendar
                 .build();
     }
 
-    public static void main(String[] args) throws IOException
+    public boolean amIFree(Date start, int durationInMinutes)
     {
-        // Build a new authorized API client service.
-        // Note: Do not confuse this class with the
-        //   com.google.api.services.calendar.model.Calendar class.
-        com.google.api.services.calendar.Calendar service =
-                getCalendarService();
+        try
+        {
+
+            long span = durationInMinutes*60*1000; //30 minutes
+            Date endTime = new Date(start.getTime() +  span);
+
+            Events events = calService.events().list("primary")
+                    .setMaxResults(10)
+                    .setTimeMin(new DateTime(start))
+                    .setTimeMax(new DateTime(endTime))
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+
+            return (events.getItems().size() == 0);
+
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    public Optional<Date> nextFreeTime(Date start, int durationInMinutes)
+    {
+        try
+        {
+
+            long span = durationInMinutes*60*1000; //30 minutes
+            Date endTime = new Date(start.getTime() +  span);
+
+            Events events = calService.events().list("primary")
+                    .setMaxResults(10)
+                    .setTimeMin(new DateTime(start))
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+
+            List<Event> items = events.getItems();
+            DateTime prevEventEnd = new DateTime(start);
+            for (Event event : items)
+            {
+                DateTime eventStart = event.getStart().getDateTime();
+                if (eventStart.getValue() >= prevEventEnd.getValue() + span)
+                    return Optional.of(new Date(prevEventEnd.getValue()));
+                prevEventEnd = event.getEnd().getDateTime();
+            }
+
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+
+    public void createAnEvent(EventDetector.EventInfo eventInfo, int durationInMinutes)
+    {
+        try
+        {
+            Event eventToAdd = new Event().setSummary(eventInfo.what + " with: " + eventInfo.who);
+            EventDateTime startTime = new EventDateTime().setDateTime(new DateTime(eventInfo.when.getTime()));
+            EventDateTime endTime = new EventDateTime().setDateTime(new DateTime(eventInfo.when.getTime() + durationInMinutes*60*1000));
+            eventToAdd.setStart(startTime);
+            eventToAdd.setEnd(endTime);
+
+            calService.events().insert("primary",eventToAdd).execute();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public void printUpcomingEvents() throws IOException
+    {
 
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
-        Events events = service.events().list("primary")
+        Events events = calService.events().list("primary")
                 .setMaxResults(10)
                 .setTimeMin(now)
                 .setOrderBy("startTime")
@@ -150,6 +240,5 @@ public class GCalendar
             }
         }
     }
-
 }
 

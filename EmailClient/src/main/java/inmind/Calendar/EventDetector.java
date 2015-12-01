@@ -57,6 +57,10 @@ public class EventDetector
                     e.printStackTrace();
                 }
             }
+            else if (emailAsJson.get("Type").toString().equals("2"))
+            {
+                eventInfo.eventType = EventType.eventAccept;
+            }
         } catch (Exception ex)
         {
             ex.printStackTrace();
