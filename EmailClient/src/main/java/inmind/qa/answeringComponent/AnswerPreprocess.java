@@ -129,7 +129,7 @@ public class AnswerPreprocess {
                                         && !similarQuestionFound) {
                                     answerFound = true;
                                     similarQuestionFound = true;
-                                    answers.append("A similar question has been answered. See <a href=\"https://www.piazza.com/class/" + piazzaFeedObjectOriginalPost.courseId + "?cid=" + piazzaFeedObjectOriginalPost.nr + "\">Click here to see the post</a> for followup discussions\n");
+                                    answers.append("A similar question has been answered. <a href=\"https://www.piazza.com/class/" + piazzaFeedObjectOriginalPost.courseId + "?cid=" + piazzaFeedObjectOriginalPost.nr + "\">Click here to see the post</a> for followup discussions\n");
                                 }
                             }
                             else {

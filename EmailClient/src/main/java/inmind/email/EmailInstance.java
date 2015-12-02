@@ -31,7 +31,7 @@ public class EmailInstance
         stringBuilder.append(String.join(";", senderList));
         stringBuilder.append("\n");
         stringBuilder.append("RECIPIENT: ");
-        stringBuilder.append(String.join(";", recipientList));
+        stringBuilder.append(String.join(";", recipientList) + "\n");
 
         stringBuilder.append("RECEIVEDATE:" + receiveDate + "\n");
         stringBuilder.append("SENTDATE:" + sentDate + "\n");

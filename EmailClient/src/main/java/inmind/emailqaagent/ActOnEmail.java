@@ -55,11 +55,13 @@ public class ActOnEmail
         EmailActor emailActor = new EmailActor(username, password, LOG, pythonScriptPath, indexLocation, course_id);
         while (true)
         {
-            emailActor.checkEmailsAndAct();
             try
             {
+
+                emailActor.checkEmailsAndAct();
                 Thread.sleep(sleepTimeInSec*1000);
-            } catch (InterruptedException e)
+
+            } catch (Exception e)
             {
                 e.printStackTrace();
             }

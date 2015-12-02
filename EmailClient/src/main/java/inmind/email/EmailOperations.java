@@ -41,30 +41,36 @@ public class EmailOperations
             //session.setDebug(true);
             Store store = session.getStore();
             store.connect("imap.gmail.com", username, password);
-            Folder inbox = store.getFolder("INBOX");
-            inbox.open(Folder.READ_ONLY);
-            for (int idx = inbox.getMessageCount() - emailsToFetch; idx < inbox.getMessageCount(); idx++)
+            try
             {
-                System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                System.out.println("EMAIL INDEX:" + idx);
-                Message msg = inbox.getMessage(idx);
-                Address[] in = msg.getFrom();
-                for (Address address : in)
+                Folder inbox = store.getFolder("INBOX");
+                inbox.open(Folder.READ_ONLY);
+                for (int idx = inbox.getMessageCount() - emailsToFetch + 1; idx <= inbox.getMessageCount(); idx++)
                 {
-                    System.out.println("FROM:" + address.toString());
+                    System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                    System.out.println("EMAIL INDEX:" + idx);
+                    Message msg = inbox.getMessage(idx);
+                    Address[] in = msg.getFrom();
+                    for (Address address : in)
+                    {
+                        System.out.println("FROM:" + address.toString());
+                    }
+                    String bodyStr = "Error!";
+                    Object msgContent = msg.getContent();
+                    if (msgContent instanceof String)
+                        bodyStr = (String) msgContent;
+                    else if (msgContent instanceof Multipart)
+                    {
+                        BodyPart bp = ((Multipart) msgContent).getBodyPart(0);
+                        bodyStr = bp.getContent().toString();
+                    }
+                    System.out.println("SENT DATE:" + msg.getSentDate());
+                    System.out.println("SUBJECT:" + msg.getSubject());
+                    System.out.println("CONTENT:" + bodyStr);
                 }
-                String bodyStr = "Error!";
-                Object msgContent = msg.getContent();
-                if (msgContent instanceof String)
-                    bodyStr = (String) msgContent;
-                else if (msgContent instanceof Multipart)
-                {
-                    BodyPart bp = ((Multipart) msgContent).getBodyPart(0);
-                    bodyStr = bp.getContent().toString();
-                }
-                System.out.println("SENT DATE:" + msg.getSentDate());
-                System.out.println("SUBJECT:" + msg.getSubject());
-                System.out.println("CONTENT:" + bodyStr);
+            } finally
+            {
+                store.close();
             }
         } catch (Exception ex)
         {
@@ -77,7 +83,7 @@ public class EmailOperations
      * @return
      * @author amos
      */
-    public List<EmailInstance> extractLastEmails(Date lastFetchDate)
+    public List<EmailInstance> extractLastEmails(Date lastFetchDate, int maxEmails)
     {
         List<EmailInstance> retEmails = new LinkedList<>();
         try
@@ -88,57 +94,63 @@ public class EmailOperations
             Session session = Session.getInstance(props, null);
             Store store = session.getStore();
             store.connect("imap.gmail.com", username, password);
-            Folder inbox = store.getFolder("INBOX");
-            inbox.open(Folder.READ_ONLY);
-            for (int counter = inbox.getMessageCount(); counter > 0; counter--)
+            try
             {
-                EmailInstance emailInstance = new EmailInstance();
-                //StringBuilder sb = new StringBuilder();
-                Message msg = inbox.getMessage(counter);
-                if (msg.getSentDate().after(lastFetchDate))
+                Folder inbox = store.getFolder("INBOX");
+                inbox.open(Folder.READ_ONLY);
+                for (int counter = inbox.getMessageCount(); counter >= inbox.getMessageCount() - maxEmails; counter--)
                 {
-                    //sb.append("<EMAIL>\n");
-                    //sb.append("EMAILID:" + counter + "\n");
-                    Address[] in = msg.getFrom();
-                    //sb.append("FROM:");
-                    for (Address address : in)
+                    EmailInstance emailInstance = new EmailInstance();
+                    //StringBuilder sb = new StringBuilder();
+                    Message msg = inbox.getMessage(counter);
+                    if (msg.getReceivedDate().after(lastFetchDate))
                     {
-                        //sb.append(address.toString() + ",");
-                        emailInstance.senderList.add(address.toString());
+                        //sb.append("<EMAIL>\n");
+                        //sb.append("EMAILID:" + counter + "\n");
+                        Address[] in = msg.getFrom();
+                        //sb.append("FROM:");
+                        for (Address address : in)
+                        {
+                            //sb.append(address.toString() + ",");
+                            emailInstance.senderList.add(address.toString());
+                        }
+                        //sb.append("\n");
+                        in = msg.getAllRecipients();
+                        //sb.append("RECIPIENT:");
+                        for (Address address : in)
+                        {
+                            //sb.append(address.toString() + ",");
+                            emailInstance.recipientList.add(address.toString());
+                        }
+                        //sb.append("\n");
+                        String bodyStr = "Error!";
+                        Object msgContent = msg.getContent();
+                        if (msgContent instanceof String)
+                            bodyStr = (String) msgContent;
+                        else if (msgContent instanceof Multipart)
+                        {
+                            BodyPart bp = ((Multipart) msgContent).getBodyPart(0);
+                            bodyStr = bp.getContent().toString();
+                        }
+                        //sb.append("RECEIVEDATE:" + msg.getReceivedDate() + "\n");
+                        emailInstance.receiveDate = msg.getReceivedDate();
+                        //sb.append("SENTDATE:" + msg.getSentDate() + "\n");
+                        emailInstance.sentDate = msg.getSentDate();
+                        //sb.append("SUBJECT:" + msg.getSubject() + "\n");
+                        emailInstance.subject = msg.getSubject();
+                        //sb.append("CONTENT:" + bodyStr + "\n");
+                        emailInstance.content = bodyStr;
+                        //sb.append("</EMAIL>\n");
+                        retEmails.add(emailInstance);
                     }
-                    //sb.append("\n");
-                    in = msg.getAllRecipients();
-                    //sb.append("RECIPIENT:");
-                    for (Address address : in)
+                    else
                     {
-                        //sb.append(address.toString() + ",");
-                        emailInstance.recipientList.add(address.toString());
+                        break;
                     }
-                    //sb.append("\n");
-                    String bodyStr = "Error!";
-                    Object msgContent = msg.getContent();
-                    if (msgContent instanceof String)
-                        bodyStr = (String) msgContent;
-                    else if (msgContent instanceof Multipart)
-                    {
-                        BodyPart bp = ((Multipart) msgContent).getBodyPart(0);
-                        bodyStr = bp.getContent().toString();
-                    }
-                    //sb.append("RECEIVEDATE:" + msg.getReceivedDate() + "\n");
-                    emailInstance.receiveDate = msg.getReceivedDate();
-                    //sb.append("SENTDATE:" + msg.getSentDate() + "\n");
-                    emailInstance.sentDate = msg.getSentDate();
-                    //sb.append("SUBJECT:" + msg.getSubject() + "\n");
-                    emailInstance.subject = msg.getSubject();
-                    //sb.append("CONTENT:" + bodyStr + "\n");
-                    emailInstance.content = bodyStr;
-                    //sb.append("</EMAIL>\n");
-                    retEmails.add(emailInstance);
                 }
-                else
-                {
-                    break;
-                }
+            } finally
+            {
+                store.close();
             }
         } catch (Exception ex)
         {
@@ -158,7 +170,7 @@ public class EmailOperations
     public void extractLastEmails(Date lastFetchDate, String fileName)
     {
         BufferedWriter writer = null;
-        List<EmailInstance> lastEmails = extractLastEmails(lastFetchDate);
+        List<EmailInstance> lastEmails = extractLastEmails(lastFetchDate, 50);
         String concatEmails = "<EMAIL>\n" + String.join("</EMAIL>\n<EMAIL>", lastEmails.stream().map(EmailInstance::toString).collect(Collectors.toList())) + "</EMAIL>\n";
 
         try

@@ -27,6 +27,18 @@ public class EventDetector
         public EventInfo()
         {
         }
+
+        public EventInfo(Date when, String what, String who)
+        {
+            this.when = when;
+            this.what = what;
+            this.who = who;
+        }
+
+        public EventInfo cloneWithNewTime(Date date)
+        {
+            return new EventInfo(date, what, who);
+        }
     }
 
     public static EventInfo emailEventInfo(EmailInstance email)

@@ -25,20 +25,25 @@ public class Index {
     public static EnglishAnalyzer INPUTANALYZER;
 
     public static void initialize (String indexPath) throws IllegalArgumentException, IOException {
-        INPUTANALYZER = new EnglishAnalyzer();
-        IndexWriterConfig config = new IndexWriterConfig(INPUTANALYZER);
-        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-        INDEXDIRECTORY = FSDirectory.open(Paths.get(indexPath));
+        if (INDEXWRITER == null)
+        {
+            INPUTANALYZER = new EnglishAnalyzer();
+            IndexWriterConfig config = new IndexWriterConfig(INPUTANALYZER);
+            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+            INDEXDIRECTORY = FSDirectory.open(Paths.get(indexPath));
 
-        Index.INDEXWRITER = new IndexWriter(INDEXDIRECTORY, config);
+            Index.INDEXWRITER = new IndexWriter(INDEXDIRECTORY, config);
 
-        //  Open the Lucene index
-        if(DirectoryReader.indexExists(INDEXDIRECTORY)) {
-            Index.INDEXREADER = DirectoryReader.open(INDEXDIRECTORY);
-            //  Lucene doesn't store field lengths the way that we want them, so we have our own document length store.
-            Index.DOCLENGTHSTORE = new DocLengthStore (Index.INDEXREADER);
-            if (Index.DOCLENGTHSTORE == null) {
-                throw new IllegalArgumentException ("Unable to open the document length store.");
+            //  Open the Lucene index
+            if (DirectoryReader.indexExists(INDEXDIRECTORY))
+            {
+                Index.INDEXREADER = DirectoryReader.open(INDEXDIRECTORY);
+                //  Lucene doesn't store field lengths the way that we want them, so we have our own document length store.
+                Index.DOCLENGTHSTORE = new DocLengthStore(Index.INDEXREADER);
+                if (Index.DOCLENGTHSTORE == null)
+                {
+                    throw new IllegalArgumentException("Unable to open the document length store.");
+                }
             }
         }
     }
